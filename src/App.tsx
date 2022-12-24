@@ -1,10 +1,15 @@
 import React from 'react';
-import { SafeAreaView, Text } from 'react-native';
+
+import { ThemeProvider } from 'styled-components';
+
+import { theme } from './styles/theme';
+
+import { Home } from './pages/Home';
 
 export const App = () => {
   return (
-    <SafeAreaView>
-      <Text style={{ fontFamily: 'IBMPlexSans-SemiBold' }}>Hello World!</Text>
-    </SafeAreaView>
+    <ThemeProvider theme={theme}>
+      <Home />
+    </ThemeProvider>
   );
 };
