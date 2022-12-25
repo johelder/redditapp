@@ -2,8 +2,9 @@ import React from 'react';
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { TRootStackParamList, TStackProps } from './types';
+import { TPostDetailsProps } from '../pages/PostDetails/types';
 
-import { useTheme } from 'styled-components';
+import { useTheme } from 'styled-components/native';
 
 import { Home } from '../pages/Home';
 import { PostDetails } from '../pages/PostDetails';
@@ -24,7 +25,10 @@ export const AppStackRoutes = ({ route }: TStackProps) => {
       <Stack.Screen
         name="PostDetails"
         component={PostDetails}
-        options={{ headerTintColor: theme.colors.primary }}
+        options={({ route: postDetailsRoute }: TPostDetailsProps) => ({
+          headerTintColor: theme.colors.primary,
+          title: postDetailsRoute.params.title,
+        })}
       />
     </Stack.Navigator>
   );
