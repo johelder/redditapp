@@ -4,7 +4,7 @@ import * as Phosphor from 'phosphor-react-native';
 import { IPostCardProps } from './types';
 import { formatDate } from '../../utils/dateFormat';
 
-import { useTheme } from 'styled-components';
+import { useTheme } from 'styled-components/native';
 
 import * as S from './styles';
 
@@ -13,7 +13,7 @@ export const PostCard = ({ post, ...rest }: IPostCardProps) => {
   const postTime = formatDate(post.data.created);
 
   return (
-    <S.Container {...rest}>
+    <S.Container {...rest} testID="post-card">
       <S.CardImageContainer>
         <S.CardImage
           source={{
