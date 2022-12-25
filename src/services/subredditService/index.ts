@@ -1,37 +1,39 @@
+import { AxiosError } from 'axios';
 import { api } from '../api';
+
 import { TSlug } from '../../dtos/slug';
 import { IGetPostsResultProps, IGetSubredditResultProps } from './types';
 
 export const subredditService = {
-  fetchSubredditData: async () => {
+  fetchSubredditData: async (): Promise<{
+    result: IGetSubredditResultProps | AxiosError;
+  }> => {
     try {
       const response = await api.get<IGetSubredditResultProps>('/about');
 
-      return {
-        ok: true,
-        data: response.data.data,
-      };
+      return { result: response.data };
     } catch (error) {
-      return {
-        ok: false,
-        error,
-      };
+      if (error instanceof AxiosError) {
+        return { result: error };
+      }
+
+      throw error;
     }
   },
 
-  fetchPostsData: async (slug: TSlug) => {
+  fetchPostsData: async (
+    slug: TSlug,
+  ): Promise<{ result: IGetPostsResultProps | AxiosError }> => {
     try {
       const response = await api.get<IGetPostsResultProps>(`/${slug}`);
 
-      return {
-        ok: true,
-        data: response.data.data.children,
-      };
+      return { result: response.data };
     } catch (error) {
-      return {
-        ok: false,
-        error,
-      };
+      if (error instanceof AxiosError) {
+        return { result: error };
+      }
+
+      throw error;
     }
   },
 };
