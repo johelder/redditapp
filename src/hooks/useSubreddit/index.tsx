@@ -1,11 +1,16 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { createContext, useContext } from 'react';
 import { observer } from 'mobx-react';
+import { AxiosError } from 'axios';
 
 import { subreddit } from '../../store/subreddit';
-
-import { ISubredditContextProps, ISubredditProviderProps } from './types';
 import { subredditService } from '../../services/subredditService';
+
+import {
+  ISubredditContextProps,
+  ISubredditProviderProps,
+  TStatus,
+} from './types';
 import { TSlug } from '../../dtos/slug';
 
 const SubRedditContext = createContext<ISubredditContextProps>(
@@ -13,31 +18,33 @@ const SubRedditContext = createContext<ISubredditContextProps>(
 );
 
 const SubRedditProvider = observer(({ children }: ISubredditProviderProps) => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [status, setStatus] = useState<TStatus>('idle');
 
   const getSubreddit = useCallback(async () => {
-    const response = await subredditService.fetchSubredditData();
+    const { result } = await subredditService.fetchSubredditData();
 
-    if (!response.ok || !response.data) {
-      throw new Error(
-        'Ocorreu um error ao buscar as informações desse subreddit.',
-      );
+    if (result instanceof AxiosError) {
+      setStatus('error');
+
+      return;
     }
 
-    subreddit.setSubreddit(response.data);
+    subreddit.setSubreddit(result.data);
   }, []);
 
   const getPosts = useCallback(async (slug: TSlug) => {
-    setIsLoading(true);
+    setStatus('loading');
 
-    const response = await subredditService.fetchPostsData(slug);
+    const { result } = await subredditService.fetchPostsData(slug);
 
-    if (!response.ok || !response.data) {
-      throw new Error('Occorreu um erro ao buscar os posts desse subreddit.');
+    if (result instanceof AxiosError) {
+      setStatus('error');
+
+      return;
     }
 
-    subreddit.setPosts(response.data);
-    setIsLoading(false);
+    subreddit.setPosts(result.data.children);
+    setStatus('success');
   }, []);
 
   useEffect(() => {
@@ -50,7 +57,7 @@ const SubRedditProvider = observer(({ children }: ISubredditProviderProps) => {
         subreddit: subreddit.information,
         getPosts,
         posts: subreddit.posts,
-        isLoading,
+        status,
       }}
     >
       {children}

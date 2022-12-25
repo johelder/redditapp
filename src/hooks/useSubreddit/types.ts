@@ -7,9 +7,11 @@ export interface ISubredditContextProps {
   subreddit: ISubreddit;
   getPosts: (slug: TSlug) => void;
   posts: IPost[];
-  isLoading: boolean;
+  status: TStatus | string;
 }
 
 export interface ISubredditProviderProps {
   children: ReactNode;
 }
+
+export type TStatus = 'idle' | 'loading' | 'success' | 'error';
