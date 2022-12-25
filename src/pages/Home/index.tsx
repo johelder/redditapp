@@ -11,7 +11,7 @@ import { useSubReddit } from '../../hooks/useSubreddit';
 
 import * as S from './styles';
 
-const Home = ({ route }: THomeProps) => {
+export const Home = ({ route }: THomeProps) => {
   const isScreenFocused = useIsFocused();
   const { subreddit, getPosts, posts, isLoading } = useSubReddit();
 
@@ -67,5 +67,3 @@ const Home = ({ route }: THomeProps) => {
     </>
   );
 };
-
-export default Home;
