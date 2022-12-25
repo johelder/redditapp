@@ -1,22 +1,41 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { ListRenderItemInfo, StatusBar } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
 
 import { THomeProps } from './types';
 import { IPost } from '../../dtos/post';
 
-import { categories } from './mock';
+import { PostCard } from '../../components/PostCard';
+import { Loading } from '../../components/Loading';
+import { useSubReddit } from '../../hooks/useSubreddit';
 
 import * as S from './styles';
-import { PostCard } from '../../components/PostCard';
 
-export const Home = ({ route }: THomeProps) => {
-  console.log(route);
+export const Home = ({ navigation, route }: THomeProps) => {
+  const isScreenFocused = useIsFocused();
+  const { subreddit, getPosts, posts, status } = useSubReddit();
+
+  useEffect(() => {
+    if (isScreenFocused) {
+      getPosts(route.params.slug);
+    }
+  }, [getPosts, isScreenFocused, route.params.slug]);
 
   const renderPost = useCallback(
     ({ item: post }: ListRenderItemInfo<IPost>) => {
-      return <PostCard />;
+      return (
+        <PostCard
+          post={post}
+          onPress={() =>
+            navigation.navigate('PostDetails', {
+              title: post.data.title,
+              permalink: post.data.permalink,
+            })
+          }
+        />
+      );
     },
-    [],
+    [navigation],
   );
 
   return (
@@ -33,20 +52,26 @@ export const Home = ({ route }: THomeProps) => {
             <S.HeaderCoverContainer>
               <S.HeaderCover
                 source={{
-                  uri: 'https://b.thumbs.redditmedia.com/chR666MVO0Y9ct_b4bfcKAolrYdL9u0q_hLOfuzxRWE.jpg',
+                  uri: subreddit.header_img,
                 }}
               />
             </S.HeaderCoverContainer>
 
-            <S.HeaderTitle>/r/cellbits</S.HeaderTitle>
-            <S.HeaderSubtitle>🎅 subreddit do cellbit 🤶</S.HeaderSubtitle>
+            <S.HeaderTitle>/r/{subreddit.display_name}</S.HeaderTitle>
+            <S.HeaderSubtitle>{subreddit.title}</S.HeaderSubtitle>
           </S.HeaderContainer>
 
-          <S.PostsList
-            data={categories.data.children}
-            renderItem={renderPost}
-            keyExtractor={post => post.id}
-          />
+          {status === 'loading' ? (
+            <Loading />
+          ) : (
+            <S.PostsList
+              data={posts}
+              renderItem={renderPost}
+              keyExtractor={post => post.data.id}
+              onRefresh={() => getPosts(route.params.slug)}
+              refreshing={status === 'loading'}
+            />
+          )}
         </S.Content>
       </S.Container>
     </>

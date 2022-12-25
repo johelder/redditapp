@@ -1,32 +1,34 @@
 import React from 'react';
 import * as Phosphor from 'phosphor-react-native';
 
+import { IPostCardProps } from './types';
+import { formatDate } from '../../utils/dateFormat';
+
 import { useTheme } from 'styled-components';
 
 import * as S from './styles';
 
-export const PostCard = () => {
+export const PostCard = ({ post, ...rest }: IPostCardProps) => {
   const theme = useTheme();
+  const postTime = formatDate(post.data.created);
 
   return (
-    <S.Container>
+    <S.Container {...rest}>
       <S.CardImageContainer>
         <S.CardImage
           source={{
-            uri: 'https://vandal-us.s3.amazonaws.com/spree/products/59eba8f0adcd9200d0a8e698/original/open-uri20180924-12-1pwnq5b.jpg',
+            uri: post.data.thumbnail,
           }}
         />
       </S.CardImageContainer>
 
       <S.CardContent>
         <S.Header>
-          <S.Label>1 minuto atrás</S.Label>
+          <S.Label>{postTime}</S.Label>
         </S.Header>
 
         <S.Body>
-          <S.CardTitle>
-            Lorem ipsum dolor sit amet, consect etur adipiscing elit.
-          </S.CardTitle>
+          <S.CardTitle>{post.data.title}</S.CardTitle>
         </S.Body>
 
         <S.Footer>
@@ -36,7 +38,7 @@ export const PostCard = () => {
               size={12}
               weight="regular"
             />
-            <S.Label>pepe_the_frog</S.Label>
+            <S.Label>{post.data.author}</S.Label>
           </S.FooterLabelContainer>
 
           <S.FooterLabelContainer>
@@ -45,7 +47,7 @@ export const PostCard = () => {
               size={12}
               weight="regular"
             />
-            <S.Label>1.000</S.Label>
+            <S.Label>{post.data.ups}</S.Label>
           </S.FooterLabelContainer>
 
           <S.FooterLabelContainer>
@@ -54,7 +56,7 @@ export const PostCard = () => {
               size={12}
               weight="regular"
             />
-            <S.Label>555</S.Label>
+            <S.Label>{post.data.num_comments}</S.Label>
           </S.FooterLabelContainer>
         </S.Footer>
       </S.CardContent>
