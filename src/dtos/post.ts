@@ -7,5 +7,6 @@ export interface IPost {
     ups: number;
     num_comments: number;
     created: number;
+    permalink: string;
   };
 }
