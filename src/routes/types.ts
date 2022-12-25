@@ -5,6 +5,10 @@ export type TRootStackParamList = {
   Home: {
     slug: TSlug;
   };
+  PostDetails: {
+    title: string;
+    permalink: string;
+  };
 };
 
 export type TNavigationProps<T extends keyof TRootStackParamList> =
