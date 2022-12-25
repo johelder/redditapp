@@ -11,9 +11,9 @@ import { useSubReddit } from '../../hooks/useSubreddit';
 
 import * as S from './styles';
 
-export const Home = ({ route }: THomeProps) => {
+export const Home = ({ navigation, route }: THomeProps) => {
   const isScreenFocused = useIsFocused();
-  const { subreddit, getPosts, posts, isLoading } = useSubReddit();
+  const { subreddit, getPosts, posts, status } = useSubReddit();
 
   useEffect(() => {
     if (isScreenFocused) {
@@ -23,9 +23,19 @@ export const Home = ({ route }: THomeProps) => {
 
   const renderPost = useCallback(
     ({ item: post }: ListRenderItemInfo<IPost>) => {
-      return <PostCard post={post} />;
+      return (
+        <PostCard
+          post={post}
+          onPress={() =>
+            navigation.navigate('PostDetails', {
+              title: post.data.title,
+              permalink: post.data.permalink,
+            })
+          }
+        />
+      );
     },
-    [],
+    [navigation],
   );
 
   return (
@@ -51,7 +61,7 @@ export const Home = ({ route }: THomeProps) => {
             <S.HeaderSubtitle>{subreddit.title}</S.HeaderSubtitle>
           </S.HeaderContainer>
 
-          {isLoading ? (
+          {status === 'loading' ? (
             <Loading />
           ) : (
             <S.PostsList
@@ -59,7 +69,7 @@ export const Home = ({ route }: THomeProps) => {
               renderItem={renderPost}
               keyExtractor={post => post.data.id}
               onRefresh={() => getPosts(route.params.slug)}
-              refreshing={isLoading}
+              refreshing={status === 'loading'}
             />
           )}
         </S.Content>
