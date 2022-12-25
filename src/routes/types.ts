@@ -1,10 +1,9 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-
-type Slug = 'best' | 'new' | 'hot' | 'controversial';
+import { TSlug } from '../dtos/slug';
 
 export type TRootStackParamList = {
   Home: {
-    slug: Slug;
+    slug: TSlug;
   };
 };
 
