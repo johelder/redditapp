@@ -16,6 +16,7 @@ class Subreddit {
       setSubreddit: action,
       posts: observable,
       setPosts: action,
+      setMorePosts: action,
     });
   }
 
@@ -25,6 +26,10 @@ class Subreddit {
 
   setPosts(posts: IPost[]) {
     this.posts = posts;
+  }
+
+  setMorePosts(posts: IPost[]) {
+    this.posts = [...this.posts, ...posts];
   }
 }
 

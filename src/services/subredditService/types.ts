@@ -7,6 +7,11 @@ export interface IGetSubredditResultProps {
 
 export interface IGetPostsResultProps {
   data: {
+    after: string;
     children: IPost[];
   };
+}
+
+export interface IPostParams {
+  after?: string;
 }

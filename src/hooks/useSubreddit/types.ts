@@ -6,6 +6,7 @@ import { ISubreddit } from '../../dtos/subreddit';
 export interface ISubredditContextProps {
   subreddit: ISubreddit;
   getPosts: (slug: TSlug) => void;
+  getMorePosts: (slug: TSlug) => void;
   posts: IPost[];
   status: TStatus | string;
 }

@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { AppStackRoutes } from './app.stack.routes';
 
 import * as Phosphor from 'phosphor-react-native';
-import { useTheme } from 'styled-components';
+import { useTheme } from 'styled-components/native';
 
 const Tab = createBottomTabNavigator();
 

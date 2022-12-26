@@ -13,7 +13,7 @@ import * as S from './styles';
 
 export const Home = ({ navigation, route }: THomeProps) => {
   const isScreenFocused = useIsFocused();
-  const { subreddit, getPosts, posts, status } = useSubReddit();
+  const { subreddit, getPosts, getMorePosts, posts, status } = useSubReddit();
 
   useEffect(() => {
     if (isScreenFocused) {
@@ -37,6 +37,14 @@ export const Home = ({ navigation, route }: THomeProps) => {
     },
     [navigation],
   );
+
+  if(status === 'error') {
+    return (
+      <S.ErrorContainer>
+        <S.ErrorLabel>Ocorreu um erro ao carregar as informações desse subreddit.</S.ErrorLabel>
+      </S.ErrorContainer>
+    )
+  }
 
   return (
     <>
@@ -70,6 +78,8 @@ export const Home = ({ navigation, route }: THomeProps) => {
               keyExtractor={post => post.data.id}
               onRefresh={() => getPosts(route.params.slug)}
               refreshing={status === 'loading'}
+              onEndReached={() => getMorePosts(route.params.slug)}
+              onEndReachedThreshold={0.1}
             />
           )}
         </S.Content>

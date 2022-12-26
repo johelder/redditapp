@@ -19,6 +19,7 @@ const SubRedditContext = createContext<ISubredditContextProps>(
 
 const SubRedditProvider = observer(({ children }: ISubredditProviderProps) => {
   const [status, setStatus] = useState<TStatus>('idle');
+  const [nextPage, setNextPage] = useState('');
 
   const getSubreddit = useCallback(async () => {
     const { result } = await subredditService.fetchSubredditData();
@@ -44,8 +45,30 @@ const SubRedditProvider = observer(({ children }: ISubredditProviderProps) => {
     }
 
     subreddit.setPosts(result.data.children);
+    setNextPage(result.data.after);
     setStatus('success');
   }, []);
+
+  const getMorePosts = useCallback(
+    async (slug: TSlug) => {
+      if (!nextPage) {
+        return;
+      }
+
+      const params = {
+        after: nextPage,
+      };
+
+      const { result } = await subredditService.fetchPostsData(slug, params);
+
+      if (result instanceof AxiosError) {
+        return;
+      }
+      setNextPage(result.data.after);
+      subreddit.setMorePosts(result.data.children);
+    },
+    [nextPage],
+  );
 
   useEffect(() => {
     getSubreddit();
@@ -56,6 +79,7 @@ const SubRedditProvider = observer(({ children }: ISubredditProviderProps) => {
       value={{
         subreddit: subreddit.information,
         getPosts,
+        getMorePosts,
         posts: subreddit.posts,
         status,
       }}
