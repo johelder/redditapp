@@ -2,7 +2,11 @@ import { AxiosError } from 'axios';
 import { api } from '../api';
 
 import { TSlug } from '../../dtos/slug';
-import { IGetPostsResultProps, IGetSubredditResultProps } from './types';
+import {
+  IGetPostsResultProps,
+  IGetSubredditResultProps,
+  IPostParams,
+} from './types';
 
 export const subredditService = {
   fetchSubredditData: async (): Promise<{
@@ -23,9 +27,12 @@ export const subredditService = {
 
   fetchPostsData: async (
     slug: TSlug,
+    params: IPostParams = {},
   ): Promise<{ result: IGetPostsResultProps | AxiosError }> => {
     try {
-      const response = await api.get<IGetPostsResultProps>(`/${slug}`);
+      const response = await api.get<IGetPostsResultProps>(`/${slug}`, {
+        params,
+      });
 
       return { result: response.data };
     } catch (error) {
