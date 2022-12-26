@@ -26,6 +26,7 @@ export const AppStackRoutes = ({ route }: TStackProps) => {
         name="PostDetails"
         component={PostDetails}
         options={({ route: postDetailsRoute }: TPostDetailsProps) => ({
+          headerBackTitle: '',
           headerTintColor: theme.colors.primary,
           title: postDetailsRoute.params.title,
         })}
