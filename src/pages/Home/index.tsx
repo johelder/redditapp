@@ -38,6 +38,14 @@ export const Home = ({ navigation, route }: THomeProps) => {
     [navigation],
   );
 
+  if(status === 'error') {
+    return (
+      <S.ErrorContainer>
+        <S.ErrorLabel>Ocorreu um erro ao carregar as informações desse subreddit.</S.ErrorLabel>
+      </S.ErrorContainer>
+    )
+  }
+
   return (
     <>
       <StatusBar

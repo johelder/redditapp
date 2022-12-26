@@ -51,3 +51,17 @@ export const PostsList = styled(
   flexGrow: 1,
   paddingHorizontal: 15,
 })``;
+
+export const ErrorContainer = styled.View`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const ErrorLabel = styled.Text`
+  font-family: ${({theme}) => theme.fonts.primary.medium};
+  font-size: 14px;
+  text-align: center;
+
+  color: ${({theme}) => theme.colors.attention}
+`;
